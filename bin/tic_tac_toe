@@ -30,14 +30,14 @@ def display(ttt)
 end
 
 init_screen do
+  write(0, STATUS+1, "q=Quit r=Reset")
+
   ttt = TicTacToe.new
 
   loop do
     display ttt
-    write(0, STATUS+1, "q=Quit r=Reset")
 
-    char = Curses.getch
-    case char
+    case Curses.getch
     when Curses::Key::UP then ttt.move(0,-1)
     when Curses::Key::DOWN then ttt.move(0,1)
     when Curses::Key::RIGHT then ttt.move(1,0)
@@ -45,8 +45,6 @@ init_screen do
     when 10 then ttt.set # enter
     when ?q then break
     when ?r then ttt = TicTacToe.new
-    else
-      # write(0, 20, char.to_s) # debugging
     end
   end
 end
