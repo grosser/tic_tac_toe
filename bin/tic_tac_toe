@@ -1,14 +1,41 @@
 #!/usr/bin/env ruby
 require 'curses'
 
-def write(x,y,text)
+BOARD = <<BOARD
+-------------
+| X | X | X |
+-------------
+| X | X | X |
+-------------
+| X | X | X |
+-------------
+BOARD
+
+class String
+  def indexes(needle)
+    found = []
+    current_index = -1
+    while current_index = index(needle, current_index+1)
+      found << current_index
+    end
+    found
+  end
+end
+"aa aaaa    aa".indexes('a') # [0, 1, 3, 4, 5, 6, 11, 12]
+
+def goto(x,y)
   Curses.setpos(y,x)
+end
+
+def write(x,y,text)
+  goto(x,y)
   Curses.addstr(text);
 end
 
 def init_screen
   Curses.noecho
   Curses.init_screen
+  Curses.stdscr.keypad(true)
   begin
     yield
   ensure
@@ -16,14 +43,61 @@ def init_screen
   end
 end
 
+def draw_board(fields)
+  index = -1
+  board = BOARD.gsub('X') do
+    index += 1
+    fields[index]
+  end
+  write(0,0, board)
+end
+
+def move_player(x,y)
+  # set new $position
+  current = possible_positions.index($position)
+  x = (current + x) % 3
+  y = ((current / 3) + y) % 3
+  $position = x + (y * 3)
+  write(0,0,$position.inspect)
+
+  # set the cursor
+  x,y = possible_positions[$position]
+  write x,y,'O'
+end
+
+def possible_positions
+  board_width = BOARD.split("\n").first.size + 1
+  BOARD.indexes('X').map do |index|
+    x = index % board_width
+    y = index / board_width
+    [x, y]
+  end
+end
+
+def all_indices_of(haystack, needle)
+  indexes = []
+  offset = 0
+  while index = BOARD.index('X', offset)
+    x = index % board_width
+    y = index / board_width
+    positions << [x, y]
+    offset = index
+  end
+end
+
 init_screen do
-  write(0,0,'TEST')
-  write(0,10,'Y')
-  write(10,0,'X')
+  $position = possible_positions.first
+  fields = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
+  draw_board fields
 
   loop do
     case Curses.getch
+    when Curses::Key::UP then move_player(0,1)
+    when Curses::Key::DOWN then move_player(0,-1)
+    when Curses::Key::RIGHT then move_player(1,0)
+    when Curses::Key::LEFT then move_player(-1,0)
     when ?q then break
     end
+    draw_board fields
   end
 end
