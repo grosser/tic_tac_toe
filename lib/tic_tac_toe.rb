@@ -25,17 +25,11 @@ BOARD
 
   attr_reader :position, :player
 
-  def initialize(&block)
+  def initialize
     @board = BOARD
     @fields = Array.new(9).fill(' ')
     @position = 0
-    @observer = block
     @player = PLAYERS.first
-    updated!
-  end
-
-  def updated!
-    @observer.call board
   end
 
   def board
@@ -51,15 +45,12 @@ BOARD
     x = (@position + x) % 3
     y = ((@position / 3) + y) % 3
     @position = x + (y * 3)
-
-    updated!
   end
 
   def set
     return if @fields[@position] != ' '
     @fields[@position] = @player
     switch_player
-    updated!
   end
 
   private

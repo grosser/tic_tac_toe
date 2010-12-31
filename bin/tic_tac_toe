@@ -18,10 +18,19 @@ def init_screen
   end
 end
 
+def display(ttt)
+  write 0,0,ttt.board
+  if winner = ttt.winner
+    write(0, 15, "Player #{winner} has won!!!!")
+  end
+end
+
 init_screen do
-  ttt = TicTacToe.new{|board| write(0,0,board) }
+  ttt = TicTacToe.new
 
   loop do
+    display ttt
+
     char = Curses.getch
     case char
     when Curses::Key::UP then ttt.move(0,-1)
