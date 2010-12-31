@@ -1,4 +1,6 @@
-Play Tic-Tac-Toe using Curses
+Play Tic-Tac-Toe using Curses(full-screen-commandline app)  
+More of an example app.
+
 
 Install
 =======
@@ -6,7 +8,13 @@ Install
 
 Usage
 =====
-    CODE_EXAMPLE
+    tic_tac_toe
+
+Use cursor keys to select field, enter to make your mark.
+
+TODO
+=====
+ - AI
 
 Author
 ======
