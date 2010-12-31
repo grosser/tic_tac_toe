@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require 'curses'
+
+def write(x,y,text)
+  Curses.setpos(y,x)
+  Curses.addstr(text);
+end
+
+def init_screen
+  Curses.noecho
+  Curses.init_screen
+  begin
+    yield
+  ensure
+    Curses.close_screen
+  end
+end
+
+init_screen do
+  write(0,0,'TEST')
+  write(0,10,'Y')
+  write(10,0,'X')
+
+  loop do
+    case Curses.getch
+    when ?q then break
+    end
+  end
+end
