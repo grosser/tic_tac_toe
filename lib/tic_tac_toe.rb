@@ -26,7 +26,6 @@ BOARD
   attr_reader :position, :player
 
   def initialize
-    @board = BOARD
     @fields = Array.new(9).fill(' ')
     @position = 0
     @player = PLAYERS.first
@@ -51,6 +50,21 @@ BOARD
     return if @fields[@position] != ' '
     @fields[@position] = @player
     switch_player
+  end
+
+  def winner
+    [
+      [0,1,2],[3,4,5],[6,7,8],  # vertical
+      [0,3,6],[1,4,7],[2,5,8],  # horizontal
+      [0,4,8],[2,4,6]           # diagonal
+    ].each do |pattern|
+      players = pattern.map{|i| @fields[i] }.uniq
+      next if players.size != 1
+      winner = players.first
+      next if winner == ' '
+      return winner
+    end
+    nil
   end
 
   private

@@ -71,4 +71,39 @@ describe TicTacToe do
       ttt.player.should == 'O'
     end
   end
+
+  describe :winner do
+    def set_fields(a)
+      ttt.instance_eval{@fields = a}
+    end
+
+    it "is nil when no-one has set" do
+      ttt.winner.should == nil
+    end
+
+    it "is nil when no-one has won" do
+      set_fields ['O','X','O', 'O','X','O', 'X','O','X']
+      ttt.winner.should == nil
+    end
+
+    it "finds diagonal" do
+      set_fields ['X','O',' ', ' ','X',' ', ' ','O','X']
+      ttt.winner.should == 'X'
+    end
+
+    it "finds vertical" do
+      set_fields ['X','O',' ', ' ','O',' ', ' ','O','X']
+      ttt.winner.should == 'O'
+    end
+
+    it "finds horizontal" do
+      set_fields ['X','O',' ', 'O','O','O', ' ','X','X']
+      ttt.winner.should == 'O'
+    end
+
+    it "finds multiple" do
+      set_fields ['O','O','O', 'X','O','X', ' ','X','O']
+      ttt.winner.should == 'O'
+    end
+  end
 end
