@@ -2,6 +2,8 @@
 require 'curses'
 require File.expand_path('../../lib/tic_tac_toe', __FILE__)
 
+STATUS = 10
+
 def write(x,y,text)
   Curses.setpos(y,x)
   Curses.addstr(text);
@@ -21,7 +23,9 @@ end
 def display(ttt)
   write 0,0,ttt.board
   if winner = ttt.winner
-    write(0, 15, "Player #{winner} has won!!!!")
+    write(0, STATUS, "Player #{winner} has won!!!!")
+  else
+    write(0, STATUS, "It is #{ttt.player}`s turn...")
   end
 end
 
@@ -30,6 +34,7 @@ init_screen do
 
   loop do
     display ttt
+    write(0, STATUS+1, "q=Quit r=Reset")
 
     char = Curses.getch
     case char
@@ -39,6 +44,7 @@ init_screen do
     when Curses::Key::LEFT then ttt.move(-1,0)
     when 10 then ttt.set # enter
     when ?q then break
+    when ?r then ttt = TicTacToe.new
     else
       # write(0, 20, char.to_s) # debugging
     end
