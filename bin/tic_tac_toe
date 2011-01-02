@@ -24,13 +24,15 @@ def display(ttt)
   write 0,0,ttt.board
   if winner = ttt.winner
     write(0, STATUS, "Player #{winner} has won!!!!")
+  elsif ttt.draw?
+    write(0, STATUS, "It is a draw...")
   else
     write(0, STATUS, "It is #{ttt.player}`s turn...")
   end
 end
 
 init_screen do
-  write(0, STATUS+1, "q=Quit r=Reset")
+  write(0, STATUS+1, "q=Quit r=Reset a=AI-move")
 
   ttt = TicTacToe.new
 
@@ -42,6 +44,7 @@ init_screen do
     when Curses::Key::DOWN then ttt.move(0,1)
     when Curses::Key::RIGHT then ttt.move(1,0)
     when Curses::Key::LEFT then ttt.move(-1,0)
+    when ?a then ttt.ai_move
     when 10 then ttt.set # enter
     when ?q then break
     when ?r then ttt = TicTacToe.new

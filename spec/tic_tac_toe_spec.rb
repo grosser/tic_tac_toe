@@ -3,6 +3,18 @@ require File.expand_path('spec/spec_helper')
 describe TicTacToe do
   def ttt; subject; end
 
+  def set_fields(a)
+    ttt.instance_eval{@fields = a}
+  end
+
+  def get_fields
+    ttt.instance_eval{@fields}
+  end
+
+  def board_full_without_winner
+    set_fields ['O','X','O', 'O','X','O', 'X','O','X']
+  end
+
   board_width = 14
 
   it "has a VERSION" do
@@ -73,16 +85,12 @@ describe TicTacToe do
   end
 
   describe :winner do
-    def set_fields(a)
-      ttt.instance_eval{@fields = a}
-    end
-
     it "is nil when no-one has set" do
       ttt.winner.should == nil
     end
 
     it "is nil when no-one has won" do
-      set_fields ['O','X','O', 'O','X','O', 'X','O','X']
+      board_full_without_winner
       ttt.winner.should == nil
     end
 
@@ -104,6 +112,44 @@ describe TicTacToe do
     it "finds multiple" do
       set_fields ['O','O','O', 'X','O','X', ' ','X','O']
       ttt.winner.should == 'O'
+    end
+  end
+
+  describe :ai do
+    it "does not move if winner is selected" do
+      set_fields(['O','O','O', ' ',' ',' ', ' ',' ',' '])
+      ttt.ai_move
+      ttt.player.should == 'X'
+    end
+
+    it "does not move if board is full" do
+      board_full_without_winner
+      ttt.ai_move
+      ttt.player.should == 'X'
+    end
+
+    it "makes a move" do
+      ttt.player.should == 'X'
+      ttt.ai_move
+      ttt.player.should == 'O'
+    end
+
+    it "prevents opponent from winning" do
+      set_fields(['O','O',' ', ' ',' ',' ', ' ',' ',' '])
+      ttt.ai_move
+      get_fields.should == ['O','O','X', ' ',' ',' ', ' ',' ',' ']
+    end
+
+    it "tries to win" do
+      set_fields(['O','O',' ', 'X','X',' ', ' ',' ',' '])
+      ttt.ai_move
+      get_fields.should == ['O','O',' ', 'X','X','X', ' ',' ',' ']
+    end
+
+    it "cannot prevent the inevitable" do
+      set_fields(['O','O',' ', 'O','O',' ', ' ',' ',' '])
+      ttt.ai_move
+      get_fields.should == ['O','O','X', 'O','O',' ', ' ',' ',' ']
     end
   end
 end

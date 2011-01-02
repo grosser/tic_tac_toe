@@ -1,4 +1,4 @@
-Play Tic-Tac-Toe using Curses(full-screen-commandline app)  
+Play Tic-Tac-Toe using Curses(full-screen-commandline app) vs humans or AI  
 More of an example app.
 
 
@@ -10,11 +10,8 @@ Usage
 =====
     tic_tac_toe
 
-Use cursor keys to select field, enter to make your mark.
-
-TODO
-=====
- - AI
+Use cursor keys to select field, enter to make your mark.  
+AI only plans 1 step ahead, so its beatable ;)
 
 Author
 ======
