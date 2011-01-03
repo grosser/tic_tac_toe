@@ -2,17 +2,17 @@
 require 'curses'
 require File.expand_path('../../lib/tic_tac_toe', __FILE__)
 
-STATUS = 10
+STATUS_LINE = 10
 
-def write(x,y,text)
-  Curses.setpos(y,x)
+def write(line, column, text)
+  Curses.setpos(line, column)
   Curses.addstr(text);
 end
 
 def init_screen
-  Curses.noecho
+  Curses.noecho # do not show typed keys
   Curses.init_screen
-  Curses.stdscr.keypad(true)
+  Curses.stdscr.keypad(true) # enable arrow keys
   begin
     yield
   ensure
@@ -23,16 +23,16 @@ end
 def display(ttt)
   write 0,0,ttt.board
   if winner = ttt.winner
-    write(0, STATUS, "Player #{winner} has won!!!!")
+    write(STATUS_LINE, 0, "Player #{winner} has won!!!!")
   elsif ttt.draw?
-    write(0, STATUS, "It is a draw...")
+    write(STATUS_LINE, 0, "It is a draw...")
   else
-    write(0, STATUS, "It is #{ttt.player}`s turn...")
+    write(STATUS_LINE, 0, "It is #{ttt.player}`s turn...")
   end
 end
 
 init_screen do
-  write(0, STATUS+1, "q=Quit r=Reset a=AI-move")
+  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
 
   ttt = TicTacToe.new
 

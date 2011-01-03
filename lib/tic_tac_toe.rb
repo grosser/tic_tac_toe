@@ -1,14 +1,3 @@
-class String
-  def indexes(needle)
-    found = []
-    current_index = -1
-    while current_index = index(needle, current_index+1)
-      found << current_index
-    end
-    found
-  end
-end
-
 class TicTacToe
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
 

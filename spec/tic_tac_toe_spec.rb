@@ -29,7 +29,7 @@ describe TicTacToe do
     end
 
     it "should position the cursor in the first position" do
-      ttt.board.indexes('[ ]').should == [board_width+1]
+      ttt.board.index('[ ]').should == board_width+1
     end
   end
 
