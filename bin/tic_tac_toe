@@ -21,6 +21,8 @@ def init_screen
 end
 
 def display(ttt)
+  Curses.clear
+  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
   write 0,0,ttt.board
   if winner = ttt.winner
     write(STATUS_LINE, 0, "Player #{winner} has won!!!!")
@@ -32,8 +34,6 @@ def display(ttt)
 end
 
 init_screen do
-  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
-
   ttt = TicTacToe.new
 
   loop do
