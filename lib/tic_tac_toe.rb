@@ -1,6 +1,6 @@
-class TicTacToe
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
+require 'tic_tac_toe/version'
 
+class TicTacToe
   BOARD = <<BOARD
 -------------
 | X | X | X |
