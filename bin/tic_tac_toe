@@ -35,9 +35,9 @@ def display(ttt)
 end
 
 def status(message)
-	# pad the status with spaces to replace old characters
-	message += " " * (STATUS_LINE_LENGTH - message.length)
-	write(STATUS_LINE, 0, message)
+  # pad the status with spaces to replace old characters
+  message += " " * (STATUS_LINE_LENGTH - message.length)
+  write(STATUS_LINE, 0, message)
 end
 
 init_screen do
