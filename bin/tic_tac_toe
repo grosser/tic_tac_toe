@@ -2,12 +2,9 @@
 require 'curses'
 require File.expand_path('../../lib/tic_tac_toe', __FILE__)
 
-STATUS_LINE = 10
 
-def write(line, column, text)
-  Curses.setpos(line, column)
-  Curses.addstr(text);
-end
+STATUS_LINE = 10
+STATUS_LINE_LENGTH = 23
 
 def init_screen
   Curses.noecho # do not show typed keys
@@ -20,21 +17,33 @@ def init_screen
   end
 end
 
+def write(line, column, text)
+  Curses.setpos(line, column)
+  Curses.addstr(text);
+end
+
+
 def display(ttt)
-  Curses.clear
-  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
   write 0,0,ttt.board
   if winner = ttt.winner
-    write(STATUS_LINE, 0, "Player #{winner} has won!!!!")
+    status("Player #{winner} has won!!!!")
   elsif ttt.draw?
-    write(STATUS_LINE, 0, "It is a draw...")
+    status("It is a draw...")
   else
-    write(STATUS_LINE, 0, "It is #{ttt.player}`s turn...")
+    status("It is #{ttt.player}`s turn...")
   end
+end
+
+def status(message)
+	# pad the status with spaces to replace old characters
+	message += " " * (STATUS_LINE_LENGTH - message.length)
+	write(STATUS_LINE, 0, message)
 end
 
 init_screen do
   ttt = TicTacToe.new
+  
+  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
 
   loop do
     display ttt
