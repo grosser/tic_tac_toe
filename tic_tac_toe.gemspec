@@ -11,5 +11,6 @@ Gem::Specification.new name, TicTacToe::VERSION do |s|
   s.executables = [name]
   s.files = `git ls-files`.split("\n")
   s.license = "MIT"
+  s.add_runtime_dependency "dispel"
 end
 

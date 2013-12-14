@@ -1,62 +1,38 @@
 #!/usr/bin/env ruby
-require 'curses'
-require File.expand_path('../../lib/tic_tac_toe', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
+require 'dispel'
+require 'tic_tac_toe'
 
-STATUS_LINE = 10
-STATUS_LINE_LENGTH = 23
-
-def init_screen
-  Curses.noecho # do not show typed keys
-  Curses.init_screen
-  Curses.stdscr.keypad(true) # enable arrow keys
-  begin
-    yield
-  ensure
-    Curses.close_screen
-  end
+def draw(ttt)
+  [ttt.board, status_line(ttt), "q=Quit r=Reset a=AI-move"].join("\n")
 end
 
-def write(line, column, text)
-  Curses.setpos(line, column)
-  Curses.addstr(text);
-end
-
-
-def display(ttt)
-  write 0,0,ttt.board
+def status_line(ttt)
   if winner = ttt.winner
-    status("Player #{winner} has won!!!!")
+    "Player #{winner} has won!!!!"
   elsif ttt.draw?
-    status("It is a draw...")
+    "It is a draw..."
   else
-    status("It is #{ttt.player}`s turn...")
+    "It is #{ttt.player}`s turn..."
   end
 end
 
-def status(message)
-  # pad the status with spaces to replace old characters
-  message += " " * (STATUS_LINE_LENGTH - message.length)
-  write(STATUS_LINE, 0, message)
-end
-
-init_screen do
+Dispel::Screen.open do |screen|
   ttt = TicTacToe.new
-  
-  write(STATUS_LINE+1, 0, "q=Quit r=Reset a=AI-move")
+  screen.draw draw(ttt)
 
-  loop do
-    display ttt
-
-    case Curses.getch
-    when Curses::Key::UP then ttt.move(0,-1)
-    when Curses::Key::DOWN then ttt.move(0,1)
-    when Curses::Key::RIGHT then ttt.move(1,0)
-    when Curses::Key::LEFT then ttt.move(-1,0)
-    when ?a then ttt.ai_move
-    when 10 then ttt.set # enter
-    when ?q then break
-    when ?r then ttt = TicTacToe.new
+  Dispel::Keyboard.output do |key|
+    case key
+    when :up then ttt.move(0,-1)
+    when :down then ttt.move(0,1)
+    when :right then ttt.move(1,0)
+    when :left then ttt.move(-1,0)
+    when "a" then ttt.ai_move
+    when :enter then ttt.set # enter
+    when "q" then break
+    when "r" then ttt = TicTacToe.new
     end
+    screen.draw draw(ttt)
   end
 end
