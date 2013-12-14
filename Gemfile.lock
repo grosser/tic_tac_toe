@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tic_tac_toe (0.2.2)
+    tic_tac_toe (0.2.3)
       dispel
 
 GEM
